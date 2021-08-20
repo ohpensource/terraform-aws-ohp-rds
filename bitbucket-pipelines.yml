@@ -1,0 +1,80 @@
+image:
+  name: 086282490297.dkr.ecr.eu-west-1.amazonaws.com/restfulapi-bitbucket:latest
+  aws:
+    access-key: $ECR_PULL_ACCESS_KEY_ID
+    secret-key: $ECR_PULL_SECRET_ACCESS_KEY
+definitions:
+  steps:
+    - step: &tfm-init
+        name: init+lint+validate
+        image: hashicorp/terraform:latest
+        script:
+          - |
+            chmod +x ./scripts/*.sh
+            source ./scripts/tfm_init.sh
+    - step: &rds-aurora-e2e-tfm-plan
+        name: rds-aurora-e2e-tfm-plan
+        image:
+          name: hashicorp/terraform:0.15.5
+        # condition:
+        #   changesets:
+        #     includePaths:
+        #       - "modules/standard/**"
+        #       - "tests/standard/**"
+        script:
+          - |
+            chmod +x ./tests/standard/*.sh
+            source ./tests/standard/tfm-plan.sh
+    - step: &rds-aurora-e2e-create-artifact
+        name: rds-aurora-e2e-create-artifact
+        image:
+          name: hashicorp/terraform:0.15.5
+        # condition:
+        #   changesets:
+        #     includePaths:
+        #       - "modules/standard/**"
+        #       - "tests/standard/**"
+        script:
+          - |
+            chmod +x ./tests/standard/*.sh
+            source ./tests/standard/create-artifact.sh
+        artifacts:
+          - ./tests/standard/*.zip
+    - step: &check-commits
+        image:
+          name: 086282490297.dkr.ecr.eu-west-1.amazonaws.com/xops-continuous-integration:latest
+          aws:
+            access-key: $ECR_AWS_ACCESS_KEY_XOPS_PULL
+            secret-key: $ECR_AWS_SECRET_KEY_XOPS_PULL
+        name: check-commits
+        script:
+          - |
+            node ./scripts/ensure-conventional-commits.js $BITBUCKET_PR_DESTINATION_BRANCH $BITBUCKET_BRANCH
+            node ./scripts/ensure-commits-message-jira-ticket.js $BITBUCKET_PR_DESTINATION_BRANCH $BITBUCKET_BRANCH
+    - step: &semver
+        image:
+          name: 086282490297.dkr.ecr.eu-west-1.amazonaws.com/xops-continuous-integration:latest
+          aws:
+            access-key: $ECR_AWS_ACCESS_KEY_XOPS_PULL
+            secret-key: $ECR_AWS_SECRET_KEY_XOPS_PULL
+        name: semver
+        script:
+          - |
+            chmod +x ./scripts/*.sh
+            source ./scripts/generate-version-and-release-notes.sh
+pipelines:
+  pull-requests:
+    "{*/*}":
+      - parallel:
+          - step: *check-commits
+          - step: *tfm-init
+          # - step: *rds-aurora-e2e-create-artifact
+      - step: *rds-aurora-e2e-tfm-plan
+  branches:
+    feature/*:      
+      - parallel:
+          #- step: *check-commits
+          - step: *tfm-init
+      - step: *rds-aurora-e2e-tfm-plan
+    main:
+      - step: *semver
