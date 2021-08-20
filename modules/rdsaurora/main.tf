@@ -126,14 +126,14 @@ resource "aws_db_parameter_group" "example" {
   name        = "${var.name}-db-57-parameter-group"
   family      = var.family
   description = "${var.name}-db-57-parameter-group"
-  tags = var.tags
+  tags        = var.tags
 }
 
 resource "aws_rds_cluster_parameter_group" "example" {
   name        = "${var.name}-cluster-parameter-group"
   family      = var.family
   description = "${var.name}-cluster-parameter-group"
-  tags = var.tags
+  tags        = var.tags
 }
 
 ################################################################################

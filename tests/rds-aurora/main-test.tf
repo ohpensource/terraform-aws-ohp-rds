@@ -44,7 +44,7 @@ provider "aws" {
 
 module "rds_aurora" {
   source                = "../../modules/rdsaurora"
-  name                  = "rds-aurora-dev"#local.name
+  name                  = "rds-aurora-dev" #local.name
   engine                = "aurora-mysql"
   engine_version        = "5.7.12"
   instance_type         = "db.r5.large"
