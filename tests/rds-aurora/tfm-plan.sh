@@ -26,9 +26,9 @@ export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY_TFM
 
 WKDIR=$PWD
 group=$(echo "$1"|tr '/' '-')
-logAction "standard Lambda - PLANNING"
+logAction "rds-aurora- PLANNING"
 logKeyValuePair "group" $group 
-cd "$WKDIR/tests/standard"
+cd "$WKDIR/tests/rds-aurora"
 
 # BACKEND-S3
 backend="backend.tf"

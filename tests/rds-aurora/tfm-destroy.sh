@@ -26,9 +26,8 @@ export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY_TFM
 
 WKDIR=$PWD
 group=$(echo "$1"|tr '/' '-')
-logAction "standard elasticache - APPLYING"
-logKeyValuePair "group" $group 
-cd "$WKDIR/tests/standard"
+logAction "rds-aurora - DESTROYING"
+cd "$WKDIR/tests/rds-aurora"
 
 # BACKEND-S3
 backend="backend.tf"
@@ -49,5 +48,5 @@ echo "}" >> $tfvars
 cat $tfvars
 
 terraform init
-terraform apply -auto-approve
+terraform destroy -auto-approve
 cd "$WKDIR"
