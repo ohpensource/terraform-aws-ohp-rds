@@ -1,0 +1,15 @@
+name: notify ms teams ci-cd channel
+
+on: [push, pull_request, check_run, release]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: toko-bifrost/ms-teams-deploy-card@master
+        if: always()
+        with:
+          github-token: ${{ github.token }}
+          webhook-uri: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
