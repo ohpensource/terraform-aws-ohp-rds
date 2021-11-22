@@ -7,33 +7,6 @@ variable "group" {
   default     = "dev"
 }
 
-locals {
-  name        = "ohp-rds-${var.group}"
-  account_id  = "215333367418"
-  region      = "eu-west-1"
-  environment = "int"
-
-  tfm_x_acc_role_name = "xops-tfm-adm-x-acc-role"
-  tfm_deploy_role_arn = "arn:aws:iam::${local.account_id}:role/${local.tfm_x_acc_role_name}-${local.environment}"
-}
-
-terraform {
-  required_version = "~>0.14"
-
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~>3.0"
-    }
-    local = {
-      source  = "hashicorp/local"
-      version = "~>2.0"
-    }
-  }
-}
-
-
-
 module "rds_aurora" {
   source                = "../modules/rdsaurora"
   name                  = "rds-aurora-dev" #local.name

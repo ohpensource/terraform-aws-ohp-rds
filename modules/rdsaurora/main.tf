@@ -174,7 +174,7 @@ resource "aws_iam_role_policy_attachment" "rds_enhanced_monitoring" {
   count = var.create_cluster && var.create_monitoring_role && var.monitoring_interval > 0 ? 1 : 0
 
   role       = aws_iam_role.rds_enhanced_monitoring[0].name
-  policy_arn = "arn:${data.aws_partition.current.partition}:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole"
 }
 
 ################################################################################
