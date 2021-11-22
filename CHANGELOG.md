@@ -1,3 +1,9 @@
+# :confetti_ball: 0.0.2 (2021-11-22T10:05:50.962Z)
+- - -
+## :bug: Fixes
+* LANZ-1390 update examples, change role arn
+- - -
+- - -
 # :confetti_ball: 0.0.1 (2021-11-22T08:20:31.189Z)
 - - -
 ## :newspaper: Others
