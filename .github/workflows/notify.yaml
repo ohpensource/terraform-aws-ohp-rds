@@ -1,6 +1,14 @@
 name: notify ms teams ci-cd channel
 
-on: [push, pull_request, check_run, release]
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  check_run:
+    branches: ["main"]
+  release:
+    branches: ["main"]
 
 jobs:
   notify:
